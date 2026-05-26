@@ -1,14 +1,19 @@
-from fastapi import FastAPI
+import time
+
+from fastapi import FastAPI, Request
+from app.routes import data, debug, messages, jobs
 
 app = FastAPI(title="Orbis")
 
-@app.get("/")
-def root():
-    return {"status": "Orbis is running"}
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start = time.time()
+    response = await call_next(request)
+    duration = round((time.time() - start) * 1000, 2)
+    print(f"{request.method} {request.url.path} → {response.status_code} ({duration}ms)")
+    return response
 
-@app.get("/data")
-def get_data():
-    return {
-        "message": "Hello from Orbis",
-        "items": ["alpha", "beta", "gamma"]
-    }
+app.include_router(debug.router,    prefix="/debug")
+app.include_router(data.router,     prefix="/data")
+app.include_router(messages.router, prefix="/messages")
+app.include_router(jobs.router,     prefix="/jobs")
