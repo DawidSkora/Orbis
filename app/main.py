@@ -1,9 +1,17 @@
 import time
 
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import data, debug, messages, jobs, qa
 
 app = FastAPI(title="Orbis")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
@@ -17,4 +25,4 @@ app.include_router(debug.router,    prefix="/debug")
 app.include_router(data.router,     prefix="/data")
 app.include_router(messages.router, prefix="/messages")
 app.include_router(jobs.router,     prefix="/jobs")
-app.include_router(qa.router,        prefix="/qa")
+app.include_router(qa.router,       prefix="/qa")
