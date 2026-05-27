@@ -1,7 +1,7 @@
 import time
 
 from fastapi import FastAPI, Request
-from app.routes import data, debug, messages, jobs
+from app.routes import data, debug, messages, jobs, qa
 
 app = FastAPI(title="Orbis")
 
@@ -17,3 +17,4 @@ app.include_router(debug.router,    prefix="/debug")
 app.include_router(data.router,     prefix="/data")
 app.include_router(messages.router, prefix="/messages")
 app.include_router(jobs.router,     prefix="/jobs")
+app.include_router(qa.router,        prefix="/qa")
