@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from uuid import UUID
 from app.database import supabase
 from app.models.qa import QAPair, QAPairUpdate
@@ -6,8 +6,14 @@ from app.models.qa import QAPair, QAPairUpdate
 router = APIRouter()
 
 @router.get("/")
-def get_all():
-    result = supabase.table("qa_pairs").select("*").execute()
+def get_all(
+    limit: int | None = Query(default=None, ge=1, le=50),
+):
+    query = supabase.table("qa_pairs").select("*")
+    if limit is not None:
+        query = query.limit(limit)
+
+    result = query.execute()
     return result.data
 
 @router.get("/{id}")
