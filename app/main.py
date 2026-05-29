@@ -2,7 +2,7 @@ import time
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import data, debug, messages, jobs, qa, gallery
+from app.routes import data, debug, messages, jobs, qa, gallery, auth, admin_gallery
 
 app = FastAPI(title="Orbis")
 
@@ -27,3 +27,5 @@ app.include_router(messages.router, prefix="/messages")
 app.include_router(jobs.router,     prefix="/jobs")
 app.include_router(qa.router,       prefix="/qa")
 app.include_router(gallery.router,  prefix="/gallery")
+app.include_router(auth.router,       prefix="/auth")
+app.include_router(admin_gallery.router, prefix="/admin/gallery")
