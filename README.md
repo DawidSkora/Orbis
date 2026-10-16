@@ -7,6 +7,7 @@ FastAPI backend for Wyczesana Łapka (Supabase).
 1. In Supabase SQL Editor, run:
    - [`supabase/migrations/001_gallery_photos.sql`](supabase/migrations/001_gallery_photos.sql)
    - [`supabase/migrations/002_admin_users.sql`](supabase/migrations/002_admin_users.sql)
+   - [`supabase/migrations/003_pricing.sql`](supabase/migrations/003_pricing.sql) — price list table + seed (current prices)
 2. Ensure `.env` has `SUPABASE_URL`, `SUPABASE_KEY` (service role), and `AUTH_SECRET`.
 3. Seed storage + gallery rows:
 
@@ -24,6 +25,7 @@ python scripts/seed_admin.py --username admin --password 'your-secure-password'
 
 - `GET /gallery/` — published photos (`?featured=true`, `?category=...`, `?limit=N`)
 - `GET /gallery/{id}` — single published photo
+- `GET /pricing/` — price list `{ data, updatedAt }` (404 until `003_pricing.sql` is run)
 
 ## Admin API (Bearer JWT from `POST /auth/login`)
 
@@ -34,6 +36,9 @@ python scripts/seed_admin.py --username admin --password 'your-secure-password'
 - `PUT /admin/gallery/{id}` — update
 - `DELETE /admin/gallery/{id}` — delete
 - `POST /admin/gallery/upload` — multipart image upload
+- `GET /admin/pricing/` — price list `{ data, updatedAt }`
+- `PUT /admin/pricing/` — replace price list `{ data, expectedUpdatedAt }`; validates the document,
+  stores the previous version in `pricing_revisions`, `409` if `expectedUpdatedAt` is outdated
 - `GET /admin/qa/` — all FAQ pairs (ordered by `created_at`)
 - `POST /admin/qa/` — create `{ question, answer }` (trimmed, non-empty)
 - `PUT /admin/qa/{id}` — update `question` and/or `answer`
