@@ -9,7 +9,7 @@ router = APIRouter()
 def get_all(
     limit: int | None = Query(default=None, ge=1, le=50),
 ):
-    query = supabase.table("qa_pairs").select("*")
+    query = supabase.table("qa_pairs").select("*").order("created_at")
     if limit is not None:
         query = query.limit(limit)
 

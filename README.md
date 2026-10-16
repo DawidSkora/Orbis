@@ -34,6 +34,23 @@ python scripts/seed_admin.py --username admin --password 'your-secure-password'
 - `PUT /admin/gallery/{id}` — update
 - `DELETE /admin/gallery/{id}` — delete
 - `POST /admin/gallery/upload` — multipart image upload
+- `GET /admin/qa/` — all FAQ pairs (ordered by `created_at`)
+- `POST /admin/qa/` — create `{ question, answer }` (trimmed, non-empty)
+- `PUT /admin/qa/{id}` — update `question` and/or `answer`
+- `DELETE /admin/qa/{id}` — delete
+
+> ⚠️ Public `POST/PUT/DELETE /qa/` are still unauthenticated (used by OrbisApp). Plan: add login to
+> OrbisApp, switch it to `/admin/qa/` and remove the public mutations.
+
+## Tests
+
+```bash
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt -r requirements-dev.txt
+pytest
+```
+
+Tests use an in-memory fake of Supabase (`tests/conftest.py`) — they never touch the real database.
 
 Gallery mutations are **not** available on public `/gallery/` routes.
 
